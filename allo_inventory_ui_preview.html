@@ -1,0 +1,194 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .app { background: #0d0d0d; border-radius: var(--border-radius-lg); overflow: hidden; border: 0.5px solid var(--color-border-tertiary); }
+  .nav { background: #161616; border-bottom: 1px solid #2a2a2a; padding: 0 20px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: #22c55e; letter-spacing: -0.03em; }
+  .nav-logo span { color: #555; }
+  .nav-badge { font-family: var(--font-mono); font-size: 10px; color: #555; background: #1e1e1e; border: 1px solid #2a2a2a; padding: 2px 10px; border-radius: 100px; }
+  .nav-badge em { color: #22c55e; font-style: normal; }
+  .screen { padding: 24px 20px; min-height: 320px; }
+  .page-title { font-size: 22px; font-weight: 500; color: #f0f0f0; letter-spacing: -0.04em; margin-bottom: 4px; }
+  .page-sub { font-size: 12px; color: #666; margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .card-name { font-size: 13px; font-weight: 500; color: #f0f0f0; }
+  .card-price { font-family: var(--font-mono); font-size: 13px; color: #22c55e; font-weight: 600; white-space: nowrap; margin-left: 8px; }
+  .card-desc { font-size: 11px; color: #666; line-height: 1.5; margin-bottom: 12px; }
+  .stock-box { background: #111; border-radius: 6px; padding: 10px; }
+  .stock-label { font-family: var(--font-mono); font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .stock-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .stock-row:last-child { margin-bottom: 0; }
+  .wh-name { font-size: 11px; color: #ccc; }
+  .wh-loc { font-size: 10px; color: #555; margin-left: 4px; }
+  .badge { font-family: var(--font-mono); font-size: 9px; padding: 2px 7px; border-radius: 4px; }
+  .badge-green { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+  .badge-amber { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+  .badge-red { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+  .reserve-btn { font-size: 10px; font-weight: 600; background: #22c55e; color: #000; border: none; border-radius: 5px; padding: 3px 10px; cursor: pointer; margin-left: 6px; }
+
+  /* Checkout page */
+  .checkout { display: none; }
+  .back-btn { background: none; border: none; color: #555; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 4px; font-family: var(--font-sans); }
+  .checkout-title { font-size: 20px; font-weight: 500; color: #f0f0f0; letter-spacing: -0.04em; margin-bottom: 4px; }
+  .res-id { font-family: var(--font-mono); font-size: 10px; color: #555; margin-bottom: 20px; }
+  .countdown-box { border-radius: 10px; padding: 16px; text-align: center; margin-bottom: 16px; border: 1px solid rgba(34,197,94,0.2); background: rgba(34,197,94,0.05); }
+  .countdown-label { font-family: var(--font-mono); font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .countdown-time { font-family: var(--font-mono); font-size: 42px; font-weight: 600; color: #22c55e; letter-spacing: -0.04em; line-height: 1; }
+  .countdown-hint { font-size: 11px; color: #555; margin-top: 6px; }
+  .summary-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .summary-header { font-family: var(--font-mono); font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .summary-product { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .summary-name { font-size: 13px; font-weight: 500; color: #f0f0f0; }
+  .summary-desc { font-size: 11px; color: #666; margin-top: 2px; }
+  .summary-price { font-family: var(--font-mono); font-weight: 600; font-size: 14px; color: #22c55e; white-space: nowrap; margin-left: 12px; }
+  .divider { border: none; border-top: 1px solid #2a2a2a; margin-bottom: 10px; }
+  .detail-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .detail-key { font-size: 11px; color: #666; }
+  .detail-val { font-family: var(--font-mono); font-size: 11px; color: #ccc; }
+  .actions { display: flex; gap: 10px; }
+  .btn-confirm { flex: 1; background: #22c55e; color: #000; border: none; border-radius: 8px; padding: 12px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: var(--font-sans); }
+  .btn-cancel { flex: 1; background: transparent; color: #ef4444; border: 1px solid rgba(239,68,68,0.35); border-radius: 8px; padding: 12px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: var(--font-sans); }
+
+  /* Confirmed state */
+  .confirmed-banner { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; padding: 12px 16px; color: #22c55e; font-weight: 500; margin-bottom: 16px; font-size: 13px; display: none; }
+  .tab-bar { display: flex; gap: 6px; margin-bottom: 20px; }
+  .tab { font-size: 11px; padding: 5px 12px; border-radius: 100px; cursor: pointer; border: 1px solid #2a2a2a; background: transparent; color: #666; font-family: var(--font-sans); }
+  .tab.active { background: #22c55e; color: #000; border-color: #22c55e; font-weight: 600; }
+</style>
+
+<div class="app">
+  <div class="nav">
+    <div class="nav-logo">allo <span>/inventory</span></div>
+    <div class="nav-badge">multi-warehouse · <em>live</em></div>
+  </div>
+
+  <div class="screen" id="listing-screen">
+    <div class="tab-bar">
+      <button class="tab active" onclick="showScreen('listing')">Product listing</button>
+      <button class="tab" onclick="showScreen('checkout')">Checkout page</button>
+      <button class="tab" onclick="showScreen('confirmed')">After confirm</button>
+    </div>
+    <div class="page-title">Product catalogue</div>
+    <div class="page-sub">Live stock across all warehouses. Reserve a unit to hold it for 10 minutes.</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><span class="card-name">Sony WH-1000XM5</span><span class="card-price">₹29,990</span></div>
+        <div class="card-desc">Industry-leading noise cancellation with 30hr battery life.</div>
+        <div class="stock-box">
+          <div class="stock-label">Stock by Warehouse</div>
+          <div class="stock-row"><span><span class="wh-name">Delhi Central</span><span class="wh-loc">New Delhi</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">7 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Mumbai Hub</span><span class="wh-loc">Mumbai</span></span><span style="display:flex;align-items:center"><span class="badge badge-amber">ONLY 2 LEFT</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Bangalore South</span><span class="wh-loc">Bengaluru</span></span><span><span class="badge badge-red">OUT OF STOCK</span></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="card-name">Apple iPad Air 11"</span><span class="card-price">₹59,900</span></div>
+        <div class="card-desc">M2 chip, 11-inch Liquid Retina display, all-day battery.</div>
+        <div class="stock-box">
+          <div class="stock-label">Stock by Warehouse</div>
+          <div class="stock-row"><span><span class="wh-name">Delhi Central</span><span class="wh-loc">New Delhi</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">4 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Mumbai Hub</span><span class="wh-loc">Mumbai</span></span><span style="display:flex;align-items:center"><span class="badge badge-amber">ONLY 1 LEFT</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Bangalore South</span><span class="wh-loc">Bengaluru</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">3 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="card-name">Samsung Galaxy S24</span><span class="card-price">₹74,999</span></div>
+        <div class="card-desc">AI-powered flagship with Snapdragon 8 Gen 3.</div>
+        <div class="stock-box">
+          <div class="stock-label">Stock by Warehouse</div>
+          <div class="stock-row"><span><span class="wh-name">Delhi Central</span><span class="wh-loc">New Delhi</span></span><span style="display:flex;align-items:center"><span class="badge badge-amber">ONLY 2 LEFT</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Mumbai Hub</span><span class="wh-loc">Mumbai</span></span><span><span class="badge badge-red">OUT OF STOCK</span></span></div>
+          <div class="stock-row"><span><span class="wh-name">Bangalore South</span><span class="wh-loc">Bengaluru</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">5 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-top"><span class="card-name">Logitech MX Master 3S</span><span class="card-price">₹9,995</span></div>
+        <div class="card-desc">Advanced wireless mouse with 8K DPI and quiet clicks.</div>
+        <div class="stock-box">
+          <div class="stock-label">Stock by Warehouse</div>
+          <div class="stock-row"><span><span class="wh-name">Delhi Central</span><span class="wh-loc">New Delhi</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">9 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Mumbai Hub</span><span class="wh-loc">Mumbai</span></span><span style="display:flex;align-items:center"><span class="badge badge-green">6 UNITS</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+          <div class="stock-row"><span><span class="wh-name">Bangalore South</span><span class="wh-loc">Bengaluru</span></span><span style="display:flex;align-items:center"><span class="badge badge-amber">ONLY 1 LEFT</span><button class="reserve-btn" onclick="showScreen('checkout')">Reserve</button></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen checkout" id="checkout-screen">
+    <div class="tab-bar">
+      <button class="tab" onclick="showScreen('listing')">Product listing</button>
+      <button class="tab active" onclick="showScreen('checkout')">Checkout page</button>
+      <button class="tab" onclick="showScreen('confirmed')">After confirm</button>
+    </div>
+    <div class="checkout-title">Checkout</div>
+    <div class="res-id">Reservation ID: <span style="color:#aaa">cm8x2k3pl0000abc123def456</span></div>
+    <div class="countdown-box">
+      <div class="countdown-label">Time remaining</div>
+      <div class="countdown-time" id="timer">09:47</div>
+      <div class="countdown-hint">Your unit is held until 11:42 PM</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-header">Order Summary</div>
+      <div class="summary-product">
+        <div><div class="summary-name">Sony WH-1000XM5 Headphones</div><div class="summary-desc">Industry-leading noise cancellation with 30hr battery.</div></div>
+        <div class="summary-price">₹29,990</div>
+      </div>
+      <hr class="divider">
+      <div class="detail-row"><span class="detail-key">Warehouse</span><span class="detail-val">Delhi Central</span></div>
+      <div class="detail-row"><span class="detail-key">Location</span><span class="detail-val">New Delhi, IN</span></div>
+      <div class="detail-row"><span class="detail-key">Units</span><span class="detail-val">1</span></div>
+      <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val" style="color:#f59e0b">⏳ Pending</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn-confirm" onclick="showScreen('confirmed')">✓ Confirm purchase</button>
+      <button class="btn-cancel" onclick="showScreen('listing')">✕ Cancel</button>
+    </div>
+  </div>
+
+  <div class="screen checkout" id="confirmed-screen">
+    <div class="tab-bar">
+      <button class="tab" onclick="showScreen('listing')">Product listing</button>
+      <button class="tab" onclick="showScreen('checkout')">Checkout page</button>
+      <button class="tab active" onclick="showScreen('confirmed')">After confirm</button>
+    </div>
+    <div class="confirmed-banner" style="display:block">✓ Order confirmed! Your unit has been secured.</div>
+    <div class="checkout-title">Checkout</div>
+    <div class="res-id">Reservation ID: <span style="color:#aaa">cm8x2k3pl0000abc123def456</span></div>
+    <div class="summary-card">
+      <div class="summary-header">Order Summary</div>
+      <div class="summary-product">
+        <div><div class="summary-name">Sony WH-1000XM5 Headphones</div><div class="summary-desc">Industry-leading noise cancellation with 30hr battery.</div></div>
+        <div class="summary-price">₹29,990</div>
+      </div>
+      <hr class="divider">
+      <div class="detail-row"><span class="detail-key">Warehouse</span><span class="detail-val">Delhi Central</span></div>
+      <div class="detail-row"><span class="detail-key">Units</span><span class="detail-val">1</span></div>
+      <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val" style="color:#22c55e">✓ Confirmed</span></div>
+    </div>
+    <button onclick="showScreen('listing')" style="width:100%;background:#1a1a1a;color:#ccc;border:1px solid #2a2a2a;border-radius:8px;padding:12px;font-size:13px;cursor:pointer;font-family:var(--font-sans)">← Back to products</button>
+  </div>
+</div>
+
+<script>
+function showScreen(name) {
+  document.getElementById('listing-screen').style.display = name === 'listing' ? 'block' : 'none';
+  document.getElementById('checkout-screen').style.display = name === 'checkout' ? 'block' : 'none';
+  document.getElementById('confirmed-screen').style.display = name === 'confirmed' ? 'block' : 'none';
+}
+
+showScreen('listing');
+
+let secs = 587;
+setInterval(() => {
+  if (secs > 0) secs--;
+  const m = Math.floor(secs / 60), s = secs % 60;
+  const el = document.getElementById('timer');
+  if (el) {
+    el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    el.style.color = secs < 60 ? '#f59e0b' : '#22c55e';
+  }
+}, 1000);
+</script>
